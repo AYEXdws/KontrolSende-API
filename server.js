@@ -1,3 +1,9 @@
+import cors from "cors";
+app.use(cors({
+  origin: "*", // (ya da sadece GitHub domainin)
+  methods: ["GET", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
+}));
 import express from "express";
 import cors from "cors";
 import { neon } from "@neondatabase/serverless";
