@@ -93,38 +93,37 @@ app.delete("/deleteResult/:id", async (req, res) => {
    EVENTS
    ========================= */
 
-// addEvent  (frontend POST /addEvent {title, desc, img})
+// ---- EVENTS ----
 app.post("/addEvent", async (req, res) => {
   try {
-    const { title, desc, img } = req.body;
-    if (!title || !img) {
-      return res.status(400).json({ success:false, error:"title & img required" });
-    }
+    const { title, desc, img, video } = req.body;
+
+    if (!title)
+      return res.status(400).json({ success: false, error: "title required" });
+
     await sql`
-      INSERT INTO events (title, description, image_url)
-      VALUES (${title}, ${desc || null}, ${img})
+      INSERT INTO events (title, description, image_url, video_url)
+      VALUES (${title}, ${desc || null}, ${img || null}, ${video || null})
     `;
-    res.json({ success:true });
+
+    res.json({ success: true });
   } catch (e) {
     console.error("addEvent:", e);
-    res.status(500).json({ success:false });
+    res.status(500).json({ success: false });
   }
 });
-
-// events (frontend GET /events bekliyor)
-app.get("/events", async (req, res) => {
+app.get("/getEvents", async (req, res) => {
   try {
     const rows = await sql`
       SELECT id, title, description, image_url, created_at
       FROM events ORDER BY id DESC LIMIT 200
     `;
-    res.json(rows); // sade dizi
+    res.json({ success: true, rows });
   } catch (e) {
-    console.error("events:", e);
-    res.status(500).json({ success:false });
+    console.error("getEvents:", e);
+    res.status(500).json({ success: false });
   }
 });
-
 // deleteEvent (2 sürüm: POST body ile VEYA DELETE /:id)
 app.post("/deleteEvent", async (req, res) => {
   try {
