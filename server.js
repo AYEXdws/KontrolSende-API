@@ -92,3 +92,15 @@ app.delete("/deleteEvent/:id", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log("✅ API listening on", PORT));
+// ---- RESULT SİL ----
+app.delete("/deleteResult/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (!id) return res.status(400).json({ success:false, error:"invalid id" });
+    await sql`DELETE FROM results WHERE id = ${id}`;
+    res.json({ success:true });
+  } catch (e) {
+    console.error("deleteResult:", e);
+    res.status(500).json({ success:false });
+  }
+});
